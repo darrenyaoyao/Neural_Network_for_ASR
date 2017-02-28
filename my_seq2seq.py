@@ -42,9 +42,10 @@ from tensorflow.python.ops import rnn
 from tensorflow.python.ops import variable_scope
 from tensorflow.python.ops import variable_scope as vs
 from tensorflow.python.util import nest
+from tensorflow.contrib.rnn.python.ops.core_rnn_cell_impl import _linear as linear
 import tensorflow as tf
 
-
+'''
 def linear(args, output_size, bias, bias_start=0.0, scope=None):
   """Linear map: sum_i(args[i] * W[i]), where W[i] is a variable.
 
@@ -99,7 +100,8 @@ def linear(args, output_size, bias, bias_start=0.0, scope=None):
           dtype=dtype,
           initializer=init_ops.constant_initializer(bias_start, dtype=dtype))
   return nn_ops.bias_add(res, biases)
-  
+'''
+
 def _extract_argmax_and_embed(embedding, output_projection=None,
                               update_embedding=True):
   """Get a loop_function that extracts the previous symbol and embeds it.
@@ -262,7 +264,7 @@ def beam_rnn_decoder(decoder_inputs, initial_state, cell, loop_function=None,
         variable_scope.get_variable_scope().reuse_variables()
 
       input_size = inp.get_shape().with_rank(2)[1]
-      print input_size
+      print(input_size)
       x = inp
       output, state = cell(x, state)
 
@@ -647,7 +649,7 @@ def beam_attention_decoder(decoder_inputs, initial_state, attention_states, cell
       v.append(variable_scope.get_variable("AttnV_%d" % a,
                                            [attention_vec_size]))
 
-    print "Initial_state"
+    print("Initial_state")
 
     state_size =  int(initial_state.get_shape().with_rank(2)[1])
     states =[]
@@ -789,8 +791,8 @@ def embedding_attention_decoder(decoder_inputs, initial_state, attention_states,
     with ops.device("/cpu:0"):
       embedding = variable_scope.get_variable("embedding",
                                               [num_symbols, embedding_size])
-    print "Check number of symbols"
-    print num_symbols
+    print("Check number of symbols")
+    print(num_symbols)
     if beam_search:
         loop_function = _extract_beam_search(
         embedding, beam_size,num_symbols, embedding_size, output_projection,
@@ -868,14 +870,14 @@ def embedding_attention_seq2seq(encoder_inputs, decoder_inputs, cell,
         embedding_size=embedding_size)
     encoder_outputs, encoder_state = tf.contrib.rnn.static_rnn(
         encoder_cell, encoder_inputs, dtype=dtype)
-    print "Symbols"
-    print num_encoder_symbols
-    print num_decoder_symbols
+    print("Symbols")
+    print(num_encoder_symbols)
+    print(num_decoder_symbols)
     # First calculate a concatenation of encoder outputs to put attention on.
     top_states = [array_ops.reshape(e, [-1, 1, cell.output_size])
                   for e in encoder_outputs]
     attention_states = array_ops.concat(top_states, 1)
-    print attention_states
+    print(attention_states)
     # Decoder.
     output_size = None
     if output_projection is None:
@@ -1096,6 +1098,6 @@ def decode_model_with_buckets(encoder_inputs, decoder_inputs, targets, weights,
         outputs.append(bucket_outputs)
         beam_paths.append(beam_path)
         beam_symbols.append(beam_symbol)
-  print "End**********"
+  print("End**********")
 
   return outputs, beam_paths, beam_symbols
