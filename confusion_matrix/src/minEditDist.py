@@ -1,3 +1,12 @@
+import pandas as pd
+import sys
+import pickle
+import numpy as np
+
+def readFromData(filename):
+    origin_data = pd.read_csv( filename, quotechar='"', skipinitialspace=True).as_matrix()
+    return origin_data[:,0]
+
 def minEditDist(target, source):
     ''' Return a pair of aligned target and source'''
     n = len(target)
@@ -135,3 +144,22 @@ def statistic(container, align_tar, align_source):
         else:
             container[align_tar[i]][align_source[i]]+=1
 
+if __name__=="__main__":
+    container = Counter()
+    org = readFromData("train_50000.csv")
+    asr = readFromData("train_50000_asr.csv")
+    for i in range(len(org)):
+        target,source = minEditDist(org[i].split(" "),asr[i].split(" "))
+        statistic(container,target,source)
+
+    print (container)
+    #save container
+    ofile = open(r'container.p','wb')
+    pickle.dump(container,ofile)
+    ofile.close()
+    '''
+    How to read?
+    rfile = open(r'container.p','rb')
+    container = pickle.load(rfile)
+    rfile.close()
+    '''
