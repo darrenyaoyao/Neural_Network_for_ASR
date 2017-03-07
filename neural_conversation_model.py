@@ -237,7 +237,6 @@ def decode():
           path, symbol , output_logits = model.step(sess, encoder_inputs, decoder_inputs,
                                            target_weights, bucket_id, True,beam_search )
 
-          print("After model step")
           k = output_logits[0]
           paths = []
           for kk in range(beam_size):
