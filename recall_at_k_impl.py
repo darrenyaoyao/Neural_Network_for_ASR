@@ -1,7 +1,5 @@
 import tensorflow as tf
 import numpy as np
-import functools
-from tensorflow.contrib.metrics import streaming_sparse_recall_at_k
 
 class streaming_recall_at_k(object):
     def __init__(self, k_list):
